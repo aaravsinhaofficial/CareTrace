@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String               @id @default(cuid())
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  name         String?
+  email        String?              @unique
+  // simple local session token (server-only placeholder, not production auth)
+  sessionToken String?              @unique
+  metrics      Metric[]
+  responses    AssessmentResponse[]
+  careCircles  CareCircleMember[]
+}
+
+model Metric {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  // e.g., "blood_pressure_systolic", "hr", "mood"
+  key        String
+  // value as number when applicable
+  valueNum   Float?
+  // value as string (e.g., note, categorical)
+  valueText  String?
+  unit       String?
+  recordedAt DateTime @default(now())
+}
+
+model AssessmentResponse {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  type      String // e.g., "phq9", "gad7", "custom"
+  score     Int?
+  answers   Json
+  createdAt DateTime @default(now())
+}
+
+model CareCircle {
+  id          String             @id @default(cuid())
+  name        String
+  members     CareCircleMember[]
+  // sharing tokens that grant read-only access
+  shareTokens ShareToken[]
+}
+
+model CareCircleMember {
+  id           String     @id @default(cuid())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  careCircle   CareCircle @relation(fields: [careCircleId], references: [id])
+  careCircleId String
+  role         String // e.g., "owner", "provider", "family"
+  joinedAt     DateTime   @default(now())
+}
+
+model ShareToken {
+  id           String     @id @default(cuid())
+  token        String     @unique
+  careCircle   CareCircle @relation(fields: [careCircleId], references: [id])
+  careCircleId String
+  createdAt    DateTime   @default(now())
+  expiresAt    DateTime?
+  // when used for read-only metric/assessment viewing
+  scopes       Json // e.g., ["metrics.read", "assessments.read"]
+}
