@@ -33,6 +33,10 @@ coverage/
 prisma/dev.db*
 prisma/**/dev.db*
 
+# Prisma native engines (platform-specific, large)
+app/generated/prisma/libquery_engine-*.node
+app/generated/prisma/**/libquery_engine-*.node
+
 # IDE
 .vscode/
 .idea/
