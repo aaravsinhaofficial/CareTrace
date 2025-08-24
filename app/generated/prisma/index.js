@@ -185,7 +185,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/aaravsinha/hackathons/neuravia/app/generated/prisma",
+      "value": "/Users/aaravsinha/CareTrace/app/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -199,7 +199,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/aaravsinha/hackathons/neuravia/prisma/schema.prisma",
+    "sourceFilePath": "/Users/aaravsinha/CareTrace/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -213,7 +213,6 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
